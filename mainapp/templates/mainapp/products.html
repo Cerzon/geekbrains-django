@@ -1,20 +1,12 @@
-<!DOCTYPE html>
-<html lang="ru">
-    <head>
-        <link rel="stylesheet" type="text/css" href="/static/mainapp/css/styles.css">
-        <title>Продукты</title>
-    </head>
-    <body>
-        <nav>
-            <ul>
-                <li><a href="/">Главная</a></li>
-                <li class="active"><em>Продукты</em></li>
-                <li><a href="/contacts">Контакты</a></li>
-            </ul>
-        </nav>
-        <main>
-            <h1>Продукты</h1>
-            <img src='/static/mainapp/img/products.jpg' />
-        </main>
-    </body>
-</html>
+{% extends 'mainapp/base.html' %}
+
+{% load static %}
+
+{% block content %}
+{{ block.super }}
+<p>
+    {% for verse in text_data %}
+        {{ verse|capfirst }}<br />
+    {% endfor %}
+</p>
+{% endblock content %}

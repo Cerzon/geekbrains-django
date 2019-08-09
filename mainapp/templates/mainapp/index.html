@@ -1,20 +1,8 @@
-<!DOCTYPE html>
-<html lang="ru">
-    <head>
-        <link rel="stylesheet" type="text/css" href="/static/mainapp/css/styles.css">
-        <title>Главная</title>
-    </head>
-    <body>
-        <nav>
-            <ul>
-                <li class="active"><em>Главная</em></li>
-                <li><a href="/products">Продукты</a></li>
-                <li><a href="/contacts">Контакты</a></li>
-            </ul>
-        </nav>
-        <main>
-            <h1>Главная</h1>
-            <img src='/static/mainapp/img/main.jpg' />
-        </main>
-    </body>
-</html>
+{% extends 'mainapp/base.html' %}
+
+{% load static %}
+
+{% block content %}
+{{ block.super }}
+{{ text_data|linebreaks }}
+{% endblock content %}

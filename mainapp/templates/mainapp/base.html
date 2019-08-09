@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="ru">
+
+    <head>
+
+        <title>{{ page_title|upper|default:'Неопознанная страница' }}</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'mainapp/css/styles.css' %}">
+
+        {% block styles %}
+        {% endblock styles %}
+           
+    </head>
+
+    <body>
+        
+        {% include 'mainapp/includes/inc_topmenu.html' %}
+
+        {% block content %}
+            <h1>{{ page_title|default:'Случилось страшное' }}</h1>
+            <img src="{% static img_src %}" />
+        {% endblock content %}
+        
+        {% block scripts %}
+        {% endblock scripts %}
+        
+    </body>
+
+</html>
