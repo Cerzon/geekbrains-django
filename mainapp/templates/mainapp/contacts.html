@@ -1,20 +1,9 @@
-<!DOCTYPE html>
-<html lang="ru">
-    <head>
-        <link rel="stylesheet" type="text/css" href="/static/mainapp/css/styles.css">
-        <title>Контакты</title>
-    </head>
-    <body>
-        <nav>
-            <ul>
-                <li><a href="/">Главная</a></li>
-                <li><a href="/products">Продукты</a></li>
-                <li class="active"><em>Контакты</em></li>
-            </ul>
-        </nav>
-        <main>
-            <h1>Контакты</h1>
-            <img src='/static/img/contacts.jpg' />
-        </main>
-    </body>
-</html>
+{% extends 'mainapp/base.html' %}
+
+{% load static %}
+
+{% block content %}
+<img src="{% static img_src %}" />
+<h1>{{ page_title }} ({{ page_title|length }} букв)</h1>
+<p>Возможные адреса: {{ addresses|join:", " }}</p>   
+{% endblock content %}
