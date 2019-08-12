@@ -34,5 +34,4 @@ def products(request):
 def contacts(request):
     with open('media/data/contacts.json', 'r', encoding='utf-8') as data_file:
         context_dict = json.load(data_file)
-    print(type(context_dict['addresses']))
     return render(request, 'mainapp/contacts.html', context_dict)
