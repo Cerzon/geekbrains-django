@@ -5,7 +5,7 @@ class ProductCategory(models.Model):
     name = models.CharField(max_length=50, verbose_name='наименование')
     description = models.TextField(blank=True, verbose_name='описание')
 
-    class Meta():
+    class Meta:
         verbose_name = 'категория товаров'
         verbose_name_plural = 'категории товаров'
         ordering = ['name',]
@@ -23,7 +23,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=8, decimal_places=2, verbose_name='цена')
     stock = models.PositiveSmallIntegerField(default=0, verbose_name='остаток на складе')
 
-    class Meta():
+    class Meta:
         verbose_name = 'товар'
         verbose_name_plural = 'товары'
         unique_together = ('category', 'slug',)
