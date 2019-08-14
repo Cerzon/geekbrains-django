@@ -1,5 +1,5 @@
 from django.shortcuts import render
-import json
+from .models import ProductCategory, Product
 
 def index(request):
     text_data = """С точки зрения банальной эрудиции
@@ -14,7 +14,7 @@ def index(request):
     }
     return render(request, 'mainapp/index.html', context_dict)
 
-def products(request):
+def products(request, cat_tag=None, prod_tag=None):
     context_dict = {
         'page_title': 'Продукты',
         'img_src': 'mainapp/img/products.jpg',

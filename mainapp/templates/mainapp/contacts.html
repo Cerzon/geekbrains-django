@@ -5,5 +5,9 @@
 {% block content %}
 <img src="{% static img_src %}" />
 <h1>{{ page_title }} ({{ page_title|length }} букв)</h1>
-<p>Возможные адреса: {{ addresses|join:", " }}</p>   
+<p>
+    {% for verse in text_data %}
+        {{ verse|capfirst }}<br />
+    {% endfor %}
+</p>   
 {% endblock content %}

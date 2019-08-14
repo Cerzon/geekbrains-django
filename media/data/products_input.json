@@ -1,0 +1,36 @@
+{
+    "categories": [
+        {
+            "slug": "locomotives",
+            "name": "локомотивы",
+            "products": [
+                {
+                    "slug": "is20-loco",
+                    "name": "паровоз ИС20",
+                    "price": 948597.44
+                },
+                {
+                    "slug": "romashkovo-loco",
+                    "name": "паровозик из Ромашково",
+                    "price": 258333.55
+                }
+            ]
+        },
+        {
+            "slug": "carriages",
+            "name": "подвижной состав",
+            "products": [
+                {
+                    "slug": "blue-wagon",
+                    "name": "голубой вагон",
+                    "price": 99999.99
+                },
+                {
+                    "slug": "detached-wagon",
+                    "name": "отцепленный вагон",
+                    "price": 128256.64
+                }
+            ]
+        }
+    ]
+}
