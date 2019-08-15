@@ -1,7 +1,7 @@
 <nav>
     <ul>
         <li{% if not request.resolver_match.namespace == 'products' and request.resolver_match.url_name == 'index' %} class="active"><em>Главная</em>{% else %}><a href="{% url 'index' %}">Главная</a>{% endif %}</li>
-        <li{% if request.resolver_match.namespace == 'products' and request.resolver_match.url_name == 'index' %} class="active"><em>Продукты</em>{% else %}><a href="{% url 'products:index' %}">Продукты</a>{% endif %}</li>
+        <li{% if request.resolver_match.namespace == 'products' %} class="active"><em>Продукты</em>{% else %}><a href="{% url 'products:index' %}">Продукты</a>{% endif %}</li>
         <li{% if request.resolver_match.url_name == 'contacts' %} class="active"><em>Контакты</em>{% else %}><a href="{% url 'contacts' %}">Контакты</a>{% endif %}</li>
     </ul>
 </nav>
