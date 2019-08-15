@@ -15,9 +15,13 @@ def index(request):
     return render(request, 'mainapp/index.html', context_dict)
 
 def products(request, cat_tag=None, prod_tag=None):
+    context_dict = {}
+    return render(request, 'mainapp/products.html', context_dict)
+
+def contacts(request):
     context_dict = {
-        'page_title': 'Продукты',
-        'img_src': 'mainapp/img/products.jpg',
+        'page_title': 'Конакты',
+        'img_src': 'img/contacts.jpg',
         'text_data': [
             'если б мишки были пчёлами,',
             'то они бы нипочём',
@@ -29,9 +33,4 @@ def products(request, cat_tag=None, prod_tag=None):
             'лазить на такие вышки.',
         ],
     }
-    return render(request, 'mainapp/products.html', context_dict)
-
-def contacts(request):
-    with open('media/data/contacts.json', 'r', encoding='utf-8') as data_file:
-        context_dict = json.load(data_file)
     return render(request, 'mainapp/contacts.html', context_dict)

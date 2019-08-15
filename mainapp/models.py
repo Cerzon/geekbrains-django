@@ -40,7 +40,7 @@ class DataInput(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        with open(os.path.join(settings.MEDIA_ROOT, self.data_file), 'r', encoding="utf-8") as data_input:
+        with open(os.path.join(settings.MEDIA_ROOT, self.data_file.name), 'r', encoding="utf-8") as data_input:
             data_list = json.load(data_input)['categories']
         for category in data_list:
             cat_obj, created = ProductCategory.objects.get_or_create(
