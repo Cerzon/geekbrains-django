@@ -69,7 +69,7 @@ def products(request, cat_tag=None, prod_tag=None):
 
 def contacts(request):
     context_dict = {
-        'page_title': 'Конакты',
+        'page_title': 'Контакты',
         'img_src': 'img/contacts.jpg',
         'text_data': [
             'если б мишки были пчёлами,',
