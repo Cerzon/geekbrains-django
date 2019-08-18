@@ -1,4 +1,4 @@
-body, div, nav, main, section, aside, header, footer,
+body, div, nav, main, section, aside, header, footer, figure, figcaption,
 article, p, h1, h2, h3, h4, ul, ol, li, dl, dt, dd, img,
 table, caption, thead, tbody, tfoot, tr, td, form {
     margin: 0;

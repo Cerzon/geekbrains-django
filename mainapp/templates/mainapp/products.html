@@ -4,9 +4,26 @@
 
 {% block content %}
 {{ block.super }}
-<p>
-    {% for verse in text_data %}
-        {{ verse|capfirst }}<br />
-    {% endfor %}
-</p>
+
+{% for error in errors %}
+    <div class='alarm'>{{ error }}</div>
+{% endfor %}
+    
+<div id="products">
+    <aside id="categories">
+        <ul>
+            {% for category in categories %}
+            <li><a href="{% url 'products:category' category.slug %}">{{ category.name|capfirst }}</a></li>
+            {% empty %}
+            <li>Не создано ещё ни одной категории товаров</li>
+            {% endfor %}
+        </ul>
+    </aside>
+    <main id="showcase">
+        <h2>{{ object.title }}</h2>
+        {% for item in object.data %}
+        <p>{{ item.0 }}<br />{{ item.1 }}</p>
+        {% endfor %}
+    </main>
+</div>
 {% endblock content %}
