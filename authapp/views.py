@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.contrib import auth
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
-from .forms import ShopUserLoginForm
+from .forms import ShopUserLoginForm, ShopUserRegisterForm
 
 def login(request):
     login_form = ShopUserLoginForm(data=request.POST)
@@ -22,4 +22,24 @@ def login(request):
 
 def logout(request):
     auth.logout(request)
+    return HttpResponseRedirect(reverse('index'))
+
+
+def register(request):
+    if request.method == 'POST':
+        register_form = ShopUserRegisterForm(request.POST, request.FILES)
+    
+        if register_form.is_valid():
+            register_form.save()
+            return HttpResponseRedirect(reverse('auth:login'))
+    else:
+        register_form = ShopUserRegisterForm()
+    context_dict = {
+        'pate_title': 'регистрация',
+        'form': register_form,
+    }
+    return render(request, 'authapp/register.html', context_dict)
+
+
+def edit(request, user_id):
     return HttpResponseRedirect(reverse('index'))

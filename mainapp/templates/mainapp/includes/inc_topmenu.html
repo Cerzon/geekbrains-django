@@ -4,10 +4,11 @@
         <li{% if request.resolver_match.namespace == 'products' %} class="active"><em>Продукты</em>{% else %}><a href="{% url 'products:index' %}">Продукты</a>{% endif %}</li>
         <li{% if request.resolver_match.url_name == 'contacts' %} class="active"><em>Контакты</em>{% else %}><a href="{% url 'contacts' %}">Контакты</a>{% endif %}</li>
         {% if user.is_authenticated %}
-            <li><a href="{{ url 'authenticate:edit' }}">{{ user.first_name }}</a></li>
-            <li><a href="{{ url 'authenticate:logout' }}">Выйти</a></li>
+            <li><a href="{% url 'auth:edit' user.pk %}">{{ user.first_name }}</a></li>
+            <li><a href="{% url 'auth:logout' %}">Выйти</a></li>
         {% else %}
-            <li><a href="{{ url 'authenticate:login }}">Войти</a></li>
+            <li><a href="{% url 'auth:login' %}">Войти</a></li>
+            <li><a href="{% url 'auth:register' %}">Регистрация</a></li>
         {% endif %}
     </ul>
 </nav>
