@@ -1,0 +1,26 @@
+{
+    "categories": [
+        {
+            "slug": "locomotives",
+            "name": "локомотивы",
+            "products": [
+                {
+                    "slug": "fd150-loco",
+                    "name": "паровоз ФД150",
+                    "price": 754683.58
+                }
+            ]
+        },
+        {
+            "slug": "carriages",
+            "name": "подвижной состав",
+            "products": [
+                {
+                    "slug": "restaurant-wagon",
+                    "name": "вагон-ресторан",
+                    "price": 627236.00
+                }
+            ]
+        }
+    ]
+}
