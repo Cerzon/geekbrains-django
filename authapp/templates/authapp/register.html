@@ -1,10 +1,11 @@
 {% extends 'mainapp/base.html' %}
 
+{% block title %}Регистрация{% endblock title %}
+
 {% block content %}
-    <form action="{% url 'auth:register' %}" method="post" enctype="multipart/form-data">
+    <form action="{% url 'auth:register' %}" method="post" enctype="multipart/form-data" class="auth-form">
         {% csrf_token %}
         {{ form.as_p }}
-        <input type="submit" value="{{ page_title }}">
+        <input type="submit" value="Регистрация" class="form-control">
     </form>
 {% endblock content %}
-    

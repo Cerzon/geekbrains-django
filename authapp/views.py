@@ -2,8 +2,9 @@ from django.shortcuts import render
 from django.contrib import auth
 from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic.edit import CreateView, UpdateView, FormView
-from .forms import ShopUserLoginForm, ShopUserRegisterForm
+from django.views.generic.edit import UpdateView, FormView
+from .models import ShopUser
+from .forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserChangeForm
 
 
 class UserLoginView(FormView):
@@ -11,15 +12,10 @@ class UserLoginView(FormView):
     form_class = ShopUserLoginForm
     success_url = reverse_lazy('index')
 
-    # def form_valid(self, form):
-    #     username = form.cleaned_data['username']
-    #     password = form.cleaned_data['password']
-    #     user = auth.authenticate(username=username, password=password)
-    #     if user and user.is_active:
-    #         auth.login(self.request, user)
-    #         return HttpResponseRedirect(reverse('index'))
-    #     else:
-    #         return self.form_invalid(form)
+    def form_valid(self, form):
+        user = auth.authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password'])
+        auth.login(self.request, user)
+        return super().form_valid(form)
 
 
 def logout(request):
@@ -44,5 +40,8 @@ def register(request):
     return render(request, 'authapp/register.html', context_dict)
 
 
-def edit(request, user_id):
-    return HttpResponseRedirect(reverse('index'))
+class EditUserProfileView(UpdateView):
+    template_name = 'authapp/edit.html'
+    form_class = ShopUserChangeForm
+    model = ShopUser
+    success_url = reverse_lazy('index')
