@@ -10,11 +10,11 @@ def index(request):
     pass
 
 
-def add_product(request, cat_tag, prod_tag):
+def add_product(request, product_id):
     pass
 
 
-def remove_product(request, cat_tag, prod_tag):
+def remove_product(request, product_id):
     pass
 
 

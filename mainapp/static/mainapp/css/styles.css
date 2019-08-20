@@ -95,6 +95,58 @@ p {
     margin: 1.2em 0;
 }
 
+#products {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    flex-flow: row nowrap;
+}
+
+#categories, #showcase {
+    display: block;
+    margin: 20px;
+}
+
+#categories {
+    flex: 1;
+    min-width: 230px;
+    max-width: 300px;
+    padding-right: 20px;
+    border-right-color: #bebebe;
+    border-right-style: double;
+}
+
+#categories li {
+    display: block;
+    margin: 0 0 -1px 0;  
+    font-size: 1rem;
+    color: #fefefe;
+    background-color: #5a5a5a;
+    border-color: #bebebe;
+    border-width: 1px;
+    border-top-style: solid;
+    border-bottom-style: solid;
+}
+
+#categories li:hover,
+#categories li.active {
+    color: #5a5a5a;
+    background-color: #fefefe;
+}
+
+#categories li a,
+#categories li em {
+    margin: 0;
+    display: block;
+    padding: 7px 20px 10px 15px;
+    font-style: normal;
+    font-size: 1rem;
+}
+
+#showcase {
+    flex: 3;
+}
+
 form.auth-form {
     margin: 20px auto;
     width: 40%;

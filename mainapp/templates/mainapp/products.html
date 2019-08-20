@@ -11,13 +11,7 @@
     
 <div id="products">
     <aside id="categories">
-        <ul>
-            {% for category in categories %}
-            <li><a href="{% url 'products:category' category.slug %}">{{ category.name|capfirst }}</a></li>
-            {% empty %}
-            <li>Не создано ещё ни одной категории товаров</li>
-            {% endfor %}
-        </ul>
+        {% include 'mainapp/includes/inc_categories.html' %}
     </aside>
     <main id="showcase">
         <h2>{{ object.title }}</h2>
