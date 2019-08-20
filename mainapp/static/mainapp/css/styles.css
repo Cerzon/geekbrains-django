@@ -94,3 +94,14 @@ img {
 p {
     margin: 1.2em 0;
 }
+
+form.auth-form {
+    margin: 20px auto;
+    width: 40%;
+    max-width: 300px;
+}
+
+.form-control {
+    margin: 5px 0;
+    width: 99%;
+}
