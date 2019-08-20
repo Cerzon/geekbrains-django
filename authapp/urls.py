@@ -4,7 +4,7 @@ import authapp.views as authapp
 app_name = 'authapp'
 
 urlpatterns = [
-    path('login/', authapp.login, name='login'),
+    path('login/', authapp.UserLoginView.as_view(), name='login'),
     path('logout/', authapp.logout, name='logout'),
     path('register/', authapp.register, name='register'),
     path('edit/<int:pk>/', authapp.edit, name='edit'),

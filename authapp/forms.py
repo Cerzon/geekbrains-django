@@ -16,9 +16,9 @@ class ShopUserLoginForm(AuthenticationForm):
 
 
 class ShopUserRegisterForm(UserCreationForm):
-    cellular = forms.CharField(required=False, validators=[
+    cellular = forms.CharField(label='номер телефона', required=False, validators=[
         validators.RegexValidator(
-            regex='^\+?\d?( ?\(? ?|-?)\d{3}( ?\)? ?|\-?)\d{3}( |\-)?\d{2}( |\-)?\d{2}$')])
+            regex='^\+?\d?( ?\(? ?|\-?)\d{3}( ?\)? ?|\-?)\d{3}( |\-)?\d{2}( |\-)?\d{2}$')])
 
     class Meta:
         model = ShopUser
