@@ -1,5 +1,4 @@
 <ul>
-    <li><a href="{% url 'products:index' %}">Все категории</a></li>
     {% for category in categories %}
     <li{% if request.resolver_match.kwargs.cat_tag == category.slug %} class="active"><em>{{ category.name|capfirst }}</em>{% else %}><a href="{% url 'products:category' category.slug %}">{{ category.name|capfirst }}</a>{% endif %}</li>
     {% endfor %}

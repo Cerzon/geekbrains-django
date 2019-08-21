@@ -147,6 +147,17 @@ p {
     flex: 3;
 }
 
+#case-content {
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    flex-flow: row wrap;
+}
+
+#case-content figure {
+    width: 33%;
+}
+
 form.auth-form {
     margin: 20px auto;
     width: 40%;

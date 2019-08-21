@@ -1,0 +1,19 @@
+{% extends 'mainapp/products.html' %}
+
+{% block showcase %}
+    <header><h2>{{ cat_title }}</h2></header>
+    <section id="case-content">
+        {% for item in object %}
+        <figure class="case-item">
+            <a href="{% url 'products:product' item.category.slug item.slug %}"><img src="/media/{% if item.image.filename %}{{ item.image.filename }}{% else %}products_img/no_image.png{% endif %}"></a>
+            <figcaption>
+                <h3><a href="{% url 'products:product' item.category.slug item.slug %}">{{ item.name }}</a></h3>
+                <p>{{ item.description }}</p>
+                <p><a href="{% url 'basket:add_product' item.pk %}">Добавить в корзину</a></p>
+                <p><a href="{% url 'basket:remove_product' item.pk %}">Удалить из корзины</a></p>
+            </figcaption>
+        </figure>
+        {% endfor %}
+    </section>
+{% endblock showcase %}
+    

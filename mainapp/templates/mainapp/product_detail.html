@@ -1,0 +1,17 @@
+{% extends 'mainapp/products.html' %}
+
+{% block showcase %}
+<header>
+    <h2>{{ object.name }}</h2>
+</header>
+<section>
+    <img src="/media/{% if object.image.filename %}{{ object.image.filename }}{% else %}products_img/no_image.png{% endif %}">
+    {% if object.description %}
+    <p>{{ object.description }}</p>
+    {% endif %}
+    <p>{{ object.price }}</p>
+    <p><a href="{% url 'basket:add_product' object.pk %}">Добавить в корзину</a></p>
+    <p><a href="{% url 'basket:remove_product' object.pk %}">Удалить из корзины</a></p>
+</section>
+{% endblock showcase %}
+    
