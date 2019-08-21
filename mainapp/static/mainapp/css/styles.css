@@ -62,8 +62,7 @@ nav ul li.active {
     background-color: #fefefe;
 }
 
-nav ul li a,
-nav ul li em {
+nav ul li a {
     margin: 0;
     padding: 5px 15px 7px 15px;
     font-style: normal;
@@ -134,8 +133,7 @@ p {
     background-color: #fefefe;
 }
 
-#categories li a,
-#categories li em {
+#categories li a {
     margin: 0;
     display: block;
     padding: 7px 20px 10px 15px;
@@ -156,6 +154,11 @@ p {
 
 #case-content figure {
     width: 33%;
+}
+
+#case-content figure img,
+#case-content figure figcaption {
+    margin: 20px;
 }
 
 form.auth-form {

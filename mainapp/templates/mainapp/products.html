@@ -20,7 +20,7 @@
             <figure class="case-item">
                 <a href="{% url 'products:category' item.slug %}"><img src="/media/{% if item.image.filename %}{{ item.image.filename }}{% else %}products_img/no_image.png{% endif %}"></a>
                 <figcaption>
-                    <h3><a href="{% url 'products:category' item.slug %}">{{ item.name }}</a></h3>
+                    <h3><a href="{% url 'products:category' item.slug %}">{{ item.name|capfirst }}</a></h3>
                     <p>{{ item.description }}</p>
                 </figcaption>
             </figure>
