@@ -11,19 +11,23 @@
     
 <div id="products">
     <aside id="categories">
-        <ul>
-            {% for category in categories %}
-            <li><a href="{% url 'products:category' category.slug %}">{{ category.name|capfirst }}</a></li>
-            {% empty %}
-            <li>Не создано ещё ни одной категории товаров</li>
-            {% endfor %}
-        </ul>
+        {% include 'mainapp/includes/inc_categories.html' %}
+        {% if basket %}{% include 'mainapp/includes/inc_basket.html' %}{% endif %}
     </aside>
     <main id="showcase">
-        <h2>{{ object.title }}</h2>
-        {% for item in object.data %}
-        <p>{{ item.0 }}<br />{{ item.1 }}</p>
-        {% endfor %}
+    {% block showcase %}
+        <section id="case-content">
+            {% for item in categories %}
+            <figure class="case-item">
+                <a href="{% url 'products:category' item.slug %}"><img src="/media/{% if item.image.filename %}{{ item.image.filename }}{% else %}products_img/no_image.png{% endif %}"></a>
+                <figcaption>
+                    <h3><a href="{% url 'products:category' item.slug %}">{{ item.name|capfirst }}</a></h3>
+                    <p>{{ item.description }}</p>
+                </figcaption>
+            </figure>
+            {% endfor %}
+        </section>
+    {% endblock showcase %}
     </main>
 </div>
 {% endblock content %}

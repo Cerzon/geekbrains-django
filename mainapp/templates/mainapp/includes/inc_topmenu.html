@@ -1,14 +1,14 @@
 <nav>
     <ul>
-        <li{% if not request.resolver_match.namespace == 'products' and request.resolver_match.url_name == 'index' %} class="active"><em>Главная</em>{% else %}><a href="{% url 'index' %}">Главная</a>{% endif %}</li>
-        <li{% if request.resolver_match.namespace == 'products' %} class="active"><em>Продукты</em>{% else %}><a href="{% url 'products:index' %}">Продукты</a>{% endif %}</li>
-        <li{% if request.resolver_match.url_name == 'contacts' %} class="active"><em>Контакты</em>{% else %}><a href="{% url 'contacts' %}">Контакты</a>{% endif %}</li>
+        <li{% if not request.resolver_match.namespace == 'products' and request.resolver_match.url_name == 'index' %} class="active"{% endif %}><a href="{% url 'index' %}">Главная</a></li>
+        <li{% if request.resolver_match.namespace == 'products' %} class="active"{% endif %}><a href="{% url 'products:index' %}">Продукты</a></li>
+        <li{% if request.resolver_match.url_name == 'contacts' %} class="active"{% endif %}><a href="{% url 'contacts' %}">Контакты</a></li>
         {% if user.is_authenticated %}
-            <li{% if request.resolver_match.namespace == 'auth' and request.resolver_match.url_name == 'edit' %} class="active"><em>Профиль</em>{% else %}><a href="{% url 'auth:edit' user.pk %}">Профиль</a>{% endif %}</li>
+            <li{% if request.resolver_match.namespace == 'auth' and request.resolver_match.url_name == 'edit' %} class="active"{% endif %}><a href="{% url 'auth:edit' user.pk %}">Профиль</a></li>
             <li><a href="{% url 'auth:logout' %}">Выйти</a></li>
         {% else %}
-            <li{% if request.resolver_match.namespace == 'auth' and request.resolver_match.url_name == 'login' %} class="active"><em>Войти</em>{% else %}><a href="{% url 'auth:login' %}">Войти</a>{% endif %}</li>
-            <li{% if request.resolver_match.namespace == 'auth' and request.resolver_match.url_name == 'register' %} class="active"><em>Регистрация</em>{% else %}><a href="{% url 'auth:register' %}">Регистрация</a>{% endif %}</li>
+            <li{% if request.resolver_match.namespace == 'auth' and request.resolver_match.url_name == 'login' %} class="active"{% endif %}><a href="{% url 'auth:login' %}">Войти</a></li>
+            <li{% if request.resolver_match.namespace == 'auth' and request.resolver_match.url_name == 'register' %} class="active"{% endif %}><a href="{% url 'auth:register' %}">Регистрация</a></li>
         {% endif %}
     </ul>
 </nav>

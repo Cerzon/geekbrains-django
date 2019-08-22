@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Count
 from .models import ProductCategory, Product
+from basketapp.models import UserBasket
 
 def index(request):
     text_data = """С точки зрения банальной эрудиции
@@ -23,6 +24,8 @@ def products(request, cat_tag=None, prod_tag=None):
         'img_src': 'mainapp/img/products.jpg',
         'categories': cat_list,
     }
+    if request.session.get('basket_id', False):
+        context_dict['basket'] = UserBasket.objects.filter(pk=request.session['basket_id']).first()
     cat_obj = None
     prod_obj = None
     if cat_tag:
@@ -30,7 +33,8 @@ def products(request, cat_tag=None, prod_tag=None):
             cat_obj = ProductCategory.objects.get(slug=cat_tag)
         except ProductCategory.DoesNotExist:
             cat_obj = None
-            context_dict['errors'].append('(00| hA(k0R detected 1. Попытка зайти в несуществующую категорию товаров.')
+            if not cat_tag == 'show-all':
+                context_dict['errors'].append('(00| hA(k0R detected 1. Попытка зайти в несуществующую категорию товаров.')
     if prod_tag:
         if cat_obj:
             try:
@@ -41,31 +45,21 @@ def products(request, cat_tag=None, prod_tag=None):
         else:
             prod_obj = None
             context_dict['errors'].append('\/3Ry (00| hA(k0R detected. Даже категории такой нет, какой уж там может быть товар. Ходите уже по ссылкам, не морочьте голову.')
-    if prod_obj: # product details
-        context_dict['object'] = {
-            'title': prod_obj.name,
-            'data': [
-                ('цена', prod_obj.price,),
-                ('остаток на складе', prod_obj.stock,),
-                ('описание', prod_obj.description,),
-            ],
-        }
-    elif cat_obj: # category details
+    if prod_obj is None and cat_obj is None:
+        if cat_tag == 'show-all': # all products list
+            prod_list = Product.objects.all()
+            cat_title = 'Все товары'
+        else: # products index
+            return render(request, 'mainapp/products.html', context_dict)
+    elif prod_obj: # product details
+        context_dict['object'] = prod_obj
+        return render(request, 'mainapp/product_detail.html', context_dict)
+    else: # category product list
         prod_list = Product.objects.filter(category=cat_obj)
-        context_dict['object'] = {
-            'title': cat_obj.name,
-            'data': [],
-        }
-        for prod_obj in prod_list:
-            context_dict['object']['data'].append((prod_obj.name, prod_obj.price,))
-    else: # index
-        context_dict['object'] = {
-            'title': 'Список категорий товаров',
-            'data': [],
-        }
-        for cat_obj in cat_list:
-            context_dict['object']['data'].append((cat_obj.name, 'товаров в категории: ' + str(cat_obj.num_prods)))
-    return render(request, 'mainapp/products.html', context_dict)
+        cat_title = cat_obj.name
+    context_dict['object'] = prod_list
+    context_dict['cat_title'] = cat_title
+    return render(request, 'mainapp/products_list.html', context_dict)
 
 def contacts(request):
     context_dict = {
