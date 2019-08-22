@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.db.models import Count
 from .models import ProductCategory, Product
+from basketapp.models import UserBasket
 
 def index(request):
     text_data = """С точки зрения банальной эрудиции
@@ -23,6 +24,8 @@ def products(request, cat_tag=None, prod_tag=None):
         'img_src': 'mainapp/img/products.jpg',
         'categories': cat_list,
     }
+    if request.session.get('basket_id', False):
+        context_dict['basket'] = UserBasket.objects.filter(pk=request.session['basket_id']).first()
     cat_obj = None
     prod_obj = None
     if cat_tag:

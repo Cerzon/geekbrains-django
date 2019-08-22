@@ -17,9 +17,13 @@ def add_product(request, product_id):
         try:
             basket = UserBasket.objects.get(pk=request.session['basket_id'])
         except UserBasket.DoesNotExist:
-            basket = UserBasket.objects.create(customer=request.user)
+            basket = UserBasket()
     else:
-        basket = UserBasket.objects.create(customer=request.user)
+        basket = UserBasket()
+    if request.user.is_authenticated:
+        if not basket.customer == request.user:
+            basket = UserBasket()
+        basket.customer = request.user
     basket.save()
     request.session['basket_id'] = basket.pk
     basket_slot, created = basket.slot.get_or_create(basket=basket, product=product)
@@ -37,6 +41,16 @@ def remove_product(request, product_id):
         try:
             basket = UserBasket.objects.get(pk=request.session['basket_id'])
         except UserBasket.DoesNotExist:
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+    if request.user.is_authenticated:
+        if not basket.customer == request.user:
+            del request.session['basket_id']
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+        basket.customer = request.user
+        basket.save()
+    else:
+        if basket.customer:
+            del request.session['basket_id']
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     try:
         basket_slot = basket.slot.get(basket=basket, product=product)

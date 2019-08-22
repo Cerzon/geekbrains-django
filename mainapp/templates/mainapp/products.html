@@ -12,6 +12,7 @@
 <div id="products">
     <aside id="categories">
         {% include 'mainapp/includes/inc_categories.html' %}
+        {% if basket %}{% include 'mainapp/includes/inc_basket.html' %}{% endif %}
     </aside>
     <main id="showcase">
     {% block showcase %}

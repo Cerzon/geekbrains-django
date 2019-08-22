@@ -1,0 +1,15 @@
+<section id="basket">
+    <h3>Корзина</h3>
+    {% if basket.get_info.total %}
+    <dl>
+        <dt>Общая сумма:</dt>
+        <dd>{{ basket.get_info.total|floatformat:2 }} умерщвленных енотов</dd>
+        <dt>Всего позиций:</dt>
+        <dd>{{ basket.get_info.product_num }}</dd>
+        <dt>Общее количество товаров:</dt>
+        <dd>{{ basket.get_info.quantity_total }}</dd>
+    </dl>
+    {% else %}
+    <p>Корзина пуста</p>
+    {% endif %}
+</section>
