@@ -5,8 +5,15 @@ from authapp.models import ShopUser
 
 
 class UserBasket(models.Model):
+    STATE_CHOICES = (
+        ('active', 'Активная',),
+        ('chkout', 'Оформлен заказ',),
+        ('droped', 'Брошенная',),
+        ('delete', 'Удалённая',),
+    )
     created = models.DateTimeField(auto_now_add=True, verbose_name='время создания')
     customer = models.ForeignKey(ShopUser, on_delete=models.CASCADE, null=True, related_name='basket', verbose_name='покупатель')
+    state = models.CharField(max_length=6, choices=STATE_CHOICES, default='active', verbose_name='статус корзины')
 
     class Meta:
         verbose_name = 'корзина'
@@ -19,7 +26,7 @@ class UserBasket(models.Model):
         return 'Корзина пользователя {0} от {1}'.format(username, self.created.strftime('%d %b %Y'))
 
     def get_info(self):
-        return self.slot.aggregate(
+        return self.slots.aggregate(
             total=Sum(
                 F('product__price') * F('quantity'),
                 output_field=models.DecimalField()),
@@ -29,8 +36,8 @@ class UserBasket(models.Model):
 
 
 class BasketSlot(models.Model):
-    basket = models.ForeignKey(UserBasket, on_delete=models.CASCADE, related_name='slot', verbose_name='корзина')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='slot', verbose_name='товар')
+    basket = models.ForeignKey(UserBasket, on_delete=models.CASCADE, related_name='slots', verbose_name='корзина')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='slots', verbose_name='товар')
     quantity = models.PositiveSmallIntegerField(verbose_name='количество', default=1)
 
     class Meta:
