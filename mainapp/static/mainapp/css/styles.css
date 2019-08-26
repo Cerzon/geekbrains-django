@@ -171,3 +171,49 @@ form.auth-form {
     margin: 5px 0;
     width: 99%;
 }
+
+.slot-row,
+.total-row {
+    display: block;
+    margin: 20px;
+}
+
+.total-row {
+    text-align: right;
+}
+
+.product-name,
+.product-price,
+.slot-quantity,
+.slot-cost,
+.slot-remove {
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 0 20px;
+}
+
+.product-name {
+    width: 50%;
+}
+
+.product-price {
+    width: 15%;
+    text-align: right;
+}
+
+.slot-quantity {
+    width: 5%;
+    text-align: center;
+}
+
+.slot-cost {
+    width: 18%;
+    text-align: right;
+}
+
+.empty-basket {
+    display: block;
+    margin: 30px;
+    font-size: 1.5em;
+    text-align: center;
+}

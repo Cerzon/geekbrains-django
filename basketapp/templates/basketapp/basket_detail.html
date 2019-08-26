@@ -1,18 +1,44 @@
 {% extends 'mainapp/base.html' %}
-
+{% load static %}
 
 {% block content %}
     <h1>Ваша корзина</h1>
     <div id="basket-detail">
         <main>
+            {% for slot in slots %}
             <section class='slot-row'>
-                <section class="product-name"></section>
-                <section class="product-price"></section>
-                <section class="product-quantity"></section>
-                <section class="product-cost"></section>
+                <section class="product-name">
+                    <a href="#">{{ slot.product.name }}</a>
+                </section>
+                <section class="product-price">{{ slot.product.price }}</section>
+                <section class="slot-quantity">
+                    <input type="number" name="{{ slot.pk }}_{{ slot.product.slug }}" id="{{ slot.pk }}_{{ slot.product.slug }}" min="1" value="{{ slot.quantity }}" class="form-control quantity-field">
+                </section>
+                <section class="slot-cost"></section>
+                <section class="slot-remove">
+                    <input type="button" value="Удалить" class="form-control delete-slot" id="{{ slot.product.slug }}_{{ slot.pk }}">
+                </section>
             </section>
+            {% empty %}
+            <section class="empty-basket">Ваша корзина пуста</section>
+            {% endfor %}
+
+            {% if slots %}
+            <section class="total-row"></section>
+            {% endif %}
         </main>
-        <footer></footer>
+        <footer>
+            {% if slots %}
+            <a href="{% url 'basketapp:clear_basket' basket_id %}">Очистить корзину</a>
+            {% endif %}
+        </footer>
     </div>
 {% endblock content %}
-    
+
+
+{% block scripts %}
+    {% if slots %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="{% static 'js/basket_scripts.js' %}"></script>
+    {% endif %}
+{% endblock scripts %}
