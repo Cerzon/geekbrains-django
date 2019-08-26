@@ -189,7 +189,7 @@ form.auth-form {
 .slot-remove {
     display: inline-block;
     box-sizing: border-box;
-    padding: 0 20px;
+    padding-right: 20px;
 }
 
 .product-name {

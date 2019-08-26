@@ -10,8 +10,15 @@ from authapp.models import ShopUser
 def index(request):
     slots = list()
     if request.session.get('basket_id', False):
-        slots = BasketSlot.objects.filter(basket__pk=request.session['basket_id'], basket__state='active')
-    return render(request, 'basketapp/basket_detail.html', {'slots': slots, 'basket_id': request.session['basket_id']})
+        slots = BasketSlot.objects.filter(
+            basket__pk=request.session['basket_id'],
+            basket__state='active'
+        ).select_related('product')
+    context_dict = {
+        'slots': slots,
+        'basket_id': request.session.get('basket_id', None),
+    }
+    return render(request, 'basketapp/basket_detail.html', context_dict)
 
 
 def add_product(request, product_id):
