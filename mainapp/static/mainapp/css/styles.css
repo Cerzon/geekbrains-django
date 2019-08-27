@@ -145,19 +145,23 @@ p {
     flex: 3;
 }
 
-#case-content {
+#case-content,
+#popular {
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
     flex-flow: row wrap;
 }
 
-#case-content figure {
+#case-content figure,
+#popular figure {
     width: 33%;
 }
 
-#case-content figure img,
-#case-content figure figcaption {
+#case-content img,
+#case-content figcaption,
+#popular img,
+#popular figcaption {
     margin: 20px;
 }
 
@@ -170,4 +174,50 @@ form.auth-form {
 .form-control {
     margin: 5px 0;
     width: 99%;
+}
+
+.slot-row,
+.total-row {
+    display: block;
+    margin: 20px;
+}
+
+.total-row {
+    text-align: right;
+}
+
+.product-name,
+.product-price,
+.slot-quantity,
+.slot-cost,
+.slot-remove {
+    display: inline-block;
+    box-sizing: border-box;
+    padding-right: 20px;
+}
+
+.product-name {
+    width: 50%;
+}
+
+.product-price {
+    width: 15%;
+    text-align: right;
+}
+
+.slot-quantity {
+    width: 5%;
+    text-align: center;
+}
+
+.slot-cost {
+    width: 18%;
+    text-align: right;
+}
+
+.empty-basket {
+    display: block;
+    margin: 30px;
+    font-size: 1.5em;
+    text-align: center;
 }

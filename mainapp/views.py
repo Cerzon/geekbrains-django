@@ -25,7 +25,7 @@ def products(request, cat_tag=None, prod_tag=None):
         'categories': cat_list,
     }
     if request.session.get('basket_id', False):
-        context_dict['basket'] = UserBasket.objects.filter(pk=request.session['basket_id']).first()
+        context_dict['basket'] = UserBasket.objects.filter(pk=request.session['basket_id'], state='active').first()
     cat_obj = None
     prod_obj = None
     if cat_tag:
@@ -45,9 +45,10 @@ def products(request, cat_tag=None, prod_tag=None):
         else:
             prod_obj = None
             context_dict['errors'].append('\/3Ry (00| hA(k0R detected. Даже категории такой нет, какой уж там может быть товар. Ходите уже по ссылкам, не морочьте голову.')
+    prod_list = Product.objects.all()
     if prod_obj is None and cat_obj is None:
+        context_dict['popular'] = prod_list.annotate(slot_num=Count('slots')).order_by('slot_num')[:3]
         if cat_tag == 'show-all': # all products list
-            prod_list = Product.objects.all()
             cat_title = 'Все товары'
         else: # products index
             return render(request, 'mainapp/products.html', context_dict)
@@ -55,8 +56,9 @@ def products(request, cat_tag=None, prod_tag=None):
         context_dict['object'] = prod_obj
         return render(request, 'mainapp/product_detail.html', context_dict)
     else: # category product list
-        prod_list = Product.objects.filter(category=cat_obj)
+        prod_list = prod_list.filter(category=cat_obj)
         cat_title = cat_obj.name
+        context_dict['popular'] = prod_list.annotate(slot_num=Count('slots')).order_by('slot_num')[:3]
     context_dict['object'] = prod_list
     context_dict['cat_title'] = cat_title
     return render(request, 'mainapp/products_list.html', context_dict)

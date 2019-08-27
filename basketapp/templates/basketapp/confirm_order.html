@@ -1,0 +1,6 @@
+{% extends 'mainapp/base.html' %}
+
+{% block content %}
+    <h1>Спасибо за Ваш заказ.</h1>
+    <p>Заказ #{{ order.pk }} на сумму {{ order.get_info.total|floatformat:2 }} у.е. отправлен на обработку. Покупайте наших слонов.</p>
+{% endblock content %}

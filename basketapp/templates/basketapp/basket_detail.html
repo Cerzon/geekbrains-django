@@ -1,0 +1,55 @@
+{% extends 'mainapp/base.html' %}
+{% load static %}
+
+{% block content %}
+    <h1>{{ title }}</h1>
+    <div id="basket-detail">
+        <main>
+            {% for slot in slots %}
+            <section class='slot-row'>
+                <section class="product-name">
+                    <a href="#">{{ slot.product.name }}</a>
+                </section>
+                <section class="product-price">{{ slot.product.price }}</section>
+                <section class="slot-quantity">
+                    {% if basket_id %}
+                    <input type="number" name="{{ slot.pk }}_{{ slot.product.slug }}" id="{{ slot.pk }}_{{ slot.product.slug }}" min="1" value="{{ slot.quantity }}" class="form-control quantity-field">
+                    {% endif %}
+                    {% if order %}
+                    <div class="quantity-field">{{ slot.quantity }}</div>
+                    {% endif %}
+                </section>
+                <section class="slot-cost">{% if order %}{{ slot.cost|floatformat:2 }}{% endif %}</section>
+                <section class="slot-remove">
+                    {% if basket_id %}
+                    <input type="button" value="Удалить" class="form-control delete-slot" id="{{ slot.product.slug }}_{{ slot.pk }}">
+                    {% endif %}
+                </section>
+            </section>
+            {% empty %}
+            <section class="empty-basket">Ваша корзина пуста</section>
+            {% endfor %}
+
+            {% if slots %}
+            <section class="total-row">{% if order %}{{ order.get_info.total|floatformat:2 }}{% endif %}</section>
+            {% endif %}
+        </main>
+        <footer>
+            {% if slots and basket_id %}
+            <a href="{% url 'basketapp:clear_basket' basket_id %}">Очистить корзину</a>
+            <a href="{% url 'basketapp:checkout' basket_id %}">Оформить заказ</a>
+            {% endif %}
+            {% if slots and order %}
+            <a href="{% url 'basketapp:confirm_order' order.id %}">Подтвердить заказ</a>
+            {% endif %}
+        </footer>
+    </div>
+{% endblock content %}
+
+
+{% block scripts %}
+    {% if basket_id %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="{% static 'js/basket_scripts.js' %}"></script>
+    {% endif %}
+{% endblock scripts %}

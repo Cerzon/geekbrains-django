@@ -12,10 +12,26 @@
 <div id="products">
     <aside id="categories">
         {% include 'mainapp/includes/inc_categories.html' %}
-        {% if basket %}{% include 'mainapp/includes/inc_basket.html' %}{% endif %}
+        <section id="basket">
+            <h3><a href="{% url 'basketapp:index' %}">Корзина</a></h3>
+            {% include 'mainapp/includes/inc_basket.html' %}
+        </section>
     </aside>
     <main id="showcase">
     {% block showcase %}
+        {% if popular %}
+        <h3>Популярные товары</h3>
+        <section id="popular">
+            {% for item in popular %}
+            <figure class="case-item">
+                <a href="{% url 'products:product' item.category.slug item.slug %}"><img src="/media/{% if item.image.filename %}{{ item.image.filename }}{% else %}products_img/no_image.png{% endif %}"></a>
+                <figcaption>
+                    <h3><a href="{% url 'products:product' item.category.slug item.slug %}">{{ item.name|capfirst }}</a></h3>
+                </figcaption>
+            </figure>
+            {% endfor %}
+        </section>
+        {% endif %}
         <section id="case-content">
             {% for item in categories %}
             <figure class="case-item">

@@ -1,6 +1,4 @@
-<section id="basket">
-    <h3>Корзина</h3>
-    {% if basket.get_info.total %}
+    {% if basket and basket.get_info.total %}
     <dl>
         <dt>Общая сумма:</dt>
         <dd>{{ basket.get_info.total|floatformat:2 }} умерщвленных енотов</dd>
@@ -12,4 +10,3 @@
     {% else %}
     <p>Корзина пуста</p>
     {% endif %}
-</section>
