@@ -46,5 +46,10 @@ function calculateTotal() {
     $(".slot-cost").each(function() {
         $total += parseFloat($(this).text().replace(",", "."));
     })
+    if ($total == 0) {
+        $("#basket-detail").children("*").children("*").remove();
+        $("#basket-detail").children("main").append($('<section class="empty-basket">Ваша корзина пуста</section>'));
+        return;
+    }
     $(".total-row").text("Итого: " + $total.toFixed(2).replace(".", ","));
 }

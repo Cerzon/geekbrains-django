@@ -145,19 +145,23 @@ p {
     flex: 3;
 }
 
-#case-content {
+#case-content,
+#popular {
     display: -webkit-flex;
     display: -ms-flexbox;
     display: flex;
     flex-flow: row wrap;
 }
 
-#case-content figure {
+#case-content figure,
+#popular figure {
     width: 33%;
 }
 
-#case-content figure img,
-#case-content figure figcaption {
+#case-content img,
+#case-content figcaption,
+#popular img,
+#popular figcaption {
     margin: 20px;
 }
 

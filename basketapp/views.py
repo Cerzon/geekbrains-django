@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404
+from django.template.loader import render_to_string
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse, reverse_lazy
 from django.db.models import F
@@ -40,37 +41,86 @@ def add_product(request, product_id):
     if not created:
         basket_slot.quantity = F('quantity') + 1
     basket_slot.save()
+    if request.is_ajax():
+        return HttpResponse(
+            render_to_string(
+                'mainapp/includes/inc_basket.html',
+                {'basket': basket},
+            )
+        )
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 def remove_product(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     if not request.session.get('basket_id', False):
+        if request.is_ajax():
+            return HttpResponse(
+                render_to_string(
+                    'mainapp/includes/inc_basket.html',
+                    {'basket': None},
+                )
+            )
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         try:
             basket = UserBasket.objects.get(pk=request.session['basket_id'])
         except UserBasket.DoesNotExist:
+            if request.is_ajax():
+                return HttpResponse(
+                    render_to_string(
+                        'mainapp/includes/inc_basket.html',
+                        {'basket': None},
+                    )
+                )
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     if request.user.is_authenticated:
         if not basket.customer == request.user:
             del request.session['basket_id']
+            if request.is_ajax():
+                return HttpResponse(
+                    render_to_string(
+                        'mainapp/includes/inc_basket.html',
+                        {'basket': None},
+                    )
+                )
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
         basket.customer = request.user
         basket.save()
     else:
         if basket.customer:
             del request.session['basket_id']
+            if request.is_ajax():
+                return HttpResponse(
+                    render_to_string(
+                        'mainapp/includes/inc_basket.html',
+                        {'basket': None},
+                    )
+                )
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     try:
         basket_slot = basket.slots.get(basket=basket, product=product)
     except BasketSlot.DoesNotExist:
+        if request.is_ajax():
+            return HttpResponse(
+                render_to_string(
+                    'mainapp/includes/inc_basket.html',
+                    {'basket': basket},
+                )
+            )
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     basket_slot.quantity -= 1
     if not basket_slot.quantity:
         basket_slot.delete()
     else:
         basket_slot.save()
+    if request.is_ajax():
+        return HttpResponse(
+            render_to_string(
+                'mainapp/includes/inc_basket.html',
+                {'basket': basket},
+            )
+        )
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
