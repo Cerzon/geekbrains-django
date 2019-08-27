@@ -25,7 +25,7 @@ def products(request, cat_tag=None, prod_tag=None):
         'categories': cat_list,
     }
     if request.session.get('basket_id', False):
-        context_dict['basket'] = UserBasket.objects.filter(pk=request.session['basket_id']).first()
+        context_dict['basket'] = UserBasket.objects.filter(pk=request.session['basket_id'], state='active').first()
     cat_obj = None
     prod_obj = None
     if cat_tag:

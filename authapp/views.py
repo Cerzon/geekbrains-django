@@ -19,12 +19,15 @@ class UserLoginView(FormView):
         auth.login(self.request, user)
         if self.request.session.get('basket_id', False):
             try:
-                basket = UserBasket.objects.get(pk=self.request.session['basket_id'])
+                basket = UserBasket.objects.get(pk=self.request.session['basket_id'], state='active')
             except UserBasket.DoesNotExist:
                 del self.request.session['basket_id']
             else:
-                basket.customer = user
-                basket.save()
+                if not basket.customer:
+                    basket.customer = user
+                    basket.save()
+            if basket.customer != user:
+                del self.request.session['basket_id']
         else:
             basket = UserBasket.objects.filter(
                 customer=user,
@@ -34,6 +37,19 @@ class UserLoginView(FormView):
             if basket:
                 self.request.session['basket_id'] = basket.pk
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if self.request.method == 'GET':
+            context['next'] = self.request.GET.get('next', None)
+        elif self.request.method == 'POST':
+            context['next'] = self.request.POST.get('next', None)
+        return context
+
+    def get_success_url(self):
+        if self.request.POST.get('next', False):
+            return self.request.POST['next']
+        return super().get_success_url()
 
 
 def logout(request):

@@ -3,6 +3,7 @@ from django.template.loader import render_to_string
 from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse, reverse_lazy
 from django.db.models import F
+from django.contrib.auth.decorators import login_required
 from .models import UserBasket, BasketSlot
 from mainapp.models import Product
 from authapp.models import ShopUser
@@ -16,6 +17,7 @@ def index(request):
             basket__state='active'
         ).select_related('product')
     context_dict = {
+        'title': 'Ваша корзина',
         'slots': slots,
         'basket_id': request.session.get('basket_id', None),
     }
@@ -26,7 +28,7 @@ def add_product(request, product_id):
     product = get_object_or_404(Product, pk=product_id)
     if request.session.get('basket_id', False):
         try:
-            basket = UserBasket.objects.get(pk=request.session['basket_id'])
+            basket = UserBasket.objects.get(pk=request.session['basket_id'], state='active')
         except UserBasket.DoesNotExist:
             basket = UserBasket()
     else:
@@ -64,8 +66,9 @@ def remove_product(request, product_id):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     else:
         try:
-            basket = UserBasket.objects.get(pk=request.session['basket_id'])
+            basket = UserBasket.objects.get(pk=request.session['basket_id'], state='active')
         except UserBasket.DoesNotExist:
+            del request.session['basket_id']
             if request.is_ajax():
                 return HttpResponse(
                     render_to_string(
@@ -75,7 +78,7 @@ def remove_product(request, product_id):
                 )
             return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
     if request.user.is_authenticated:
-        if not basket.customer == request.user:
+        if basket.customer and basket.customer != request.user:
             del request.session['basket_id']
             if request.is_ajax():
                 return HttpResponse(
@@ -125,12 +128,8 @@ def remove_product(request, product_id):
 
 
 def clear_basket(request, basket_id):
-    BasketSlot.objects.filter(basket__pk=basket_id).delete()
+    BasketSlot.objects.filter(basket__pk=basket_id, basket__state='active').delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
-
-
-def drop_basket(request, basket_id):
-    pass
 
 
 def update_slot(request, slot_slug):
@@ -154,3 +153,40 @@ def delete_slot(request, slot_slug):
         return HttpResponse('что-то пошло не так - удалять нечего')
     basket_slot.delete()
     return HttpResponse('slot deleted')
+
+
+@login_required
+def checkout(request, basket_id):
+    try:
+        basket = UserBasket.objects.get(pk=basket_id, state='active')
+    except UserBasket.DoesNotExist:
+        return HttpResponse('однако за время пути корзина смогла и уйти, или оформиться раньше')
+    if not basket.customer:
+        basket.customer = request.user
+        basket.save()
+    elif basket.customer != request.user:
+        del request.session['basket_id']
+        return HttpResponse('как вообще можно умудриться чужую корзину выкупить?!')
+    context_dict = {
+        'title': 'Подтверждение заказа',
+        'slots': basket.slots.all().select_related('product'),
+        'order': basket,
+    }
+    return render(request, 'basketapp/basket_detail.html', context_dict)
+
+
+@login_required
+def confirm_order(request, order_id):
+    try:
+        basket = UserBasket.objects.get(pk=order_id, state='active')
+    except UserBasket.DoesNotExist:
+        return HttpResponse('однако за время пути корзина смогла и уйти, или оформиться раньше')
+    if not basket.customer:
+        basket.customer = request.user
+        basket.save()
+    elif basket.customer != request.user:
+        del request.session['basket_id']
+        return HttpResponse('как вообще можно умудриться чужую корзину выкупить?!')
+    basket.state = 'chkout'
+    basket.save()
+    return render(request, 'basketapp/confirm_order.html', {'order': basket})

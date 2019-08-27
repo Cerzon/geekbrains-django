@@ -35,7 +35,7 @@ window.onload = function() {
 function calculateCost() {
     $(".slot-row").each(function() {
         var $price = parseFloat($(this).children(".product-price").text().replace(",", "."));
-        var $quantity = parseInt($(this).children(".slot-quantity").children("input").val());
+        var $quantity = parseInt($(this).find(".quantity-field").val());
         var $cost = ($price * $quantity).toFixed(2);
         $(this).children(".slot-cost").text($cost.replace(".", ","));
     })

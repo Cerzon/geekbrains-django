@@ -50,3 +50,7 @@ class BasketSlot(models.Model):
         if self.basket.customer:
             username = self.basket.customer.username
         return '({0}) {1} - {2}'.format(username, self.product.name, self.quantity)
+
+    @property
+    def cost(self):
+        return self.product.price * self.quantity
