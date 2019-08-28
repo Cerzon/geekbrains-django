@@ -1,0 +1,16 @@
+{% extends 'adminapp/base.html' %}
+
+{% block content %}
+    {% if categories %}
+    {% include 'adminapp/includes/inc_category_list.html' %}
+    {% endif %}
+    <h1>{{ title }}</h1>
+    <ul>
+    {% for object in object_list %}
+        <li>{{ object.name }}</li>
+    {% empty %}
+        <li>Нет объектов для отображения</li>
+    {% endfor %}
+    </ul>
+{% endblock content %}
+    
