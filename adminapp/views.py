@@ -12,7 +12,13 @@ class CreateProductView(CreateView):
 
 
 class UpdateProductView(UpdateView):
-    pass
+    model = Product
+    fields = '__all__'
+    template_name = 'adminapp/product_update.html'
+    success_url = reverse_lazy('adminapp:product_list')
+
+    def get_success_url(self):
+        return reverse_lazy('adminapp:product_detail', kwargs={'pk': self.kwargs['pk']})
 
 
 class DeleteProductView(DeleteView):
@@ -41,4 +47,5 @@ class ProductListView(ListView):
 
 
 class ProductDetailView(DetailView):
-    pass
+    model = Product
+    template_name = 'adminapp/product_detail.html'
