@@ -225,7 +225,6 @@ class UserDetailView(SuperUserPassesTestMixin, DetailView):
         }
         return context
 
-##############
 
 class CreateCategoryView(SuperUserPassesTestMixin, CreateView):
     model = ProductCategory
