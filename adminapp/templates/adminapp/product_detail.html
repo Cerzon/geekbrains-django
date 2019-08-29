@@ -1,7 +1,7 @@
 {% extends 'adminapp/base.html' %}
 
 {% block content %}
-    <a href="{% url 'adminapp:product_list' %}">К перечню товаров</a>
+    <a href="{% url links.list.0 %}">{{ links.list.1 }}</a>
     <h1>{{ object.name }}</h1>
     <img src="/media/{% if object.image %}{{ object.image }}{% else %}products_img/no_image.png{% endif %}" alt="{{ object.name }}">
     <p>{{ object.description }}</p>
@@ -11,6 +11,7 @@
         <dt>Остаток:</dt>
         <dd>{{ object.stock }}</dd>
     </dl>
-    <a href="{% url 'adminapp:product_update' object.pk %}">Изменить</a>
+    <a href="{% url links.update.0 object.pk %}">{{ links.update.1 }}</a>
+    <a href="{% url links.delete.0 object.pk %}">{{ links.delete.1 }}</a>
 {% endblock content %}
     

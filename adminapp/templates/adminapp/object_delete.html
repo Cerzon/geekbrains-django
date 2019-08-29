@@ -1,0 +1,15 @@
+{% extends 'adminapp/base.html' %}
+
+{% block title %}
+Удаление {{ object }}
+{% endblock title %}
+
+{% block content %}
+    <a href="{% url links.list.0 %}">{{ links.list.1 }}</a>
+    <h1>Вы уверены, что хотите удалить {{ object }}?</h1>
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Удалить">
+    </form>
+{% endblock content %}
+    

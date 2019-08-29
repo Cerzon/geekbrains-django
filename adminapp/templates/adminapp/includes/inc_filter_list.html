@@ -1,0 +1,10 @@
+<ul>
+    <li>
+        <a href="{% url links.list.0 %}">Все</a>
+    </li>
+    {% for item in filters %}
+    <li>
+        <a href="{% url links.filter.0 item.pk %}">{{ item.name }}</a>
+    </li>
+    {% endfor %}
+</ul>

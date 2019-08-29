@@ -1,0 +1,18 @@
+{% extends 'adminapp/base.html' %}
+
+{% block content %}
+    <a href="{% url links.list.0 %}">{{ links.list.1 }}</a>
+    <h1>{{ object }}</h1>
+    <img src="/media/{% if object.avatar %}{{ object.avatar }}{% else %}products_img/no_image.png{% endif %}" alt="{{ object }}">
+    <p>{{ object.first_name }}</p>
+    <p>{{ object.last_name }}</p>
+    <dl>
+        <dt>Возраст:</dt>
+        <dd>{{ object.age }}</dd>
+        <dt>Телефон:</dt>
+        <dd>{{ object.phone }}</dd>
+    </dl>
+    <a href="{% url links.update.0 object.pk %}">{{ links.update.1 }}</a>
+    <a href="{% url links.delete.0 object.pk %}">{{ links.delete.1 }}</a>
+{% endblock content %}
+    
