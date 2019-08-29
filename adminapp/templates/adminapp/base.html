@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="ru">
+    <head>
+        <title>{% block title %}{{ title|default:'Страница админки' }}{% endblock title %}</title>
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        {% block styles %}
+        <link rel="stylesheet" href="{% static 'adminapp/css/styles.css' %}">
+        {% endblock styles %}
+    </head>
+    <body>
+        {% block content %}
+        {% endblock content %}
+
+        {% block scripts %}
+        {% endblock scripts %}
+    </body>
+</html>

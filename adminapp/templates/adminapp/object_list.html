@@ -1,0 +1,17 @@
+{% extends 'adminapp/base.html' %}
+
+{% block content %}
+    {% if filters %}
+    {% include 'adminapp/includes/inc_filter_list.html' %}
+    {% endif %}
+    <h1>{{ title }}</h1>
+    <a href="{% url links.create.0 %}">{{ links.create.1 }}</a>
+    <ul>
+    {% for object in object_list %}
+        <li><a href="{% url links.detail.0 object.pk %}">{{ object }}</a></li>
+    {% empty %}
+        <li>Нет объектов для отображения</li>
+    {% endfor %}
+    </ul>
+{% endblock content %}
+    

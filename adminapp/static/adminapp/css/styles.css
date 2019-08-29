@@ -1,0 +1,15 @@
+ul {
+    list-style: none;
+}
+
+li {
+    margin: 5px 10px;
+    border-color: #bebebe;
+    border-width: 1px;
+    border-bottom-style: solid;
+}
+
+.form-control {
+    margin: 5px 0;
+    width: 99%;
+}
