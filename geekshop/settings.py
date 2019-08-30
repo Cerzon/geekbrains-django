@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from configparser import RawConfigParser
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -137,3 +138,14 @@ STATICFILES_DIRS = [
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Some stuff
+
+EMAIL_HOST = mail.django.local
+EMAIL_PORT = 465
+EMAIL_USE_SSL = True
+
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880
+FIRST_DAY_OF_WEEK = 1
+SECURE_SSL_REDIRECT = False
+SITE_ID = 1
