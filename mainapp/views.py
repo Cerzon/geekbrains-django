@@ -45,7 +45,7 @@ def products(request, cat_tag=None, prod_tag=None):
         else:
             prod_obj = None
             context_dict['errors'].append('\/3Ry (00| hA(k0R detected. Даже категории такой нет, какой уж там может быть товар. Ходите уже по ссылкам, не морочьте голову.')
-    prod_list = Product.objects.all()
+    prod_list = Product.objects.all().select_related('category')
     if prod_obj is None and cat_obj is None:
         context_dict['popular'] = prod_list.annotate(slot_num=Count('slots')).order_by('slot_num')[:3]
         if cat_tag == 'show-all': # all products list
