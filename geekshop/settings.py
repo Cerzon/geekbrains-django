@@ -12,26 +12,30 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 from configparser import RawConfigParser
+from ast import literal_eval
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+# Create RawConfigParser instance and read a conf file with all that
+# secret and critical settings shit
+conf_parser = RawConfigParser()
+conf_parser.read(os.path.join(BASE_DIR, 'conf', 'local.conf'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'qqud)7(w42fmmfb5i=#dxwy6sbxx0gmooj$smh2-@te2ldoz90'
+SECRET_KEY = conf_parser.get('keys', 'SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = conf_parser.getboolean('common', 'DEBUG', fallback=False)
 
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = literal_eval(conf_parser.get('common', 'ALLOWED_HOSTS', fallback='[]'))
 
 # Application definition
 
@@ -86,9 +90,14 @@ WSGI_APPLICATION = 'geekshop.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
+        'ENGINE': conf_parser.get('db', 'ENGINE', fallback='django.db.backends.sqlite3'),
+        'NAME': conf_parser.get('db', 'NAME', fallback=os.path.join(BASE_DIR, 'db.sqlite3')),
+        'USER': conf_parser.get('db', 'USER', fallback=''),
+        'PASSWORD': conf_parser.get('db', 'PASSWORD', fallback=''),
+        'HOST': conf_parser.get('db', 'HOST', fallback=''),
+        'PORT': conf_parser.get('db', 'PORT', fallback=''),
+        'OPTIONS': literal_eval(conf_parser.get('db', 'OPTIONS', fallback='{}')),
+    },
 }
 
 AUTH_USER_MODEL = 'authapp.ShopUser'
@@ -139,11 +148,17 @@ STATICFILES_DIRS = [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Some stuff
+# Mail stuff
 
-EMAIL_HOST = mail.django.local
+ADMINS = literal_eval(conf_parser.get('mail', 'ADMINS', fallback='[]'))
+
+MANAGERS = literal_eval(conf_parser.get('mail', 'MANAGERS', fallback='[]'))
+
+EMAIL_HOST = 'mail.django.local'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
+
+# Some other stuff
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880
 FIRST_DAY_OF_WEEK = 1

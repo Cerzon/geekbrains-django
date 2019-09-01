@@ -1,5 +1,6 @@
 import os
 import json
+from configparser import RawConfigParser
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from mainapp.models import ProductCategory, Product
@@ -38,5 +39,12 @@ class Command(BaseCommand):
             for user in users:
                 pass
         else:
+            conf_parser = RawConfigParser()
+            conf_parser.read(os.path.join(settings.BASE_DIR, 'conf', 'local.conf'))
             ShopUser.objects.all().delete()
-            ShopUser.objects.create_superuser('django', 'django@geekshop.local', 'geekbrains', age=41)
+            ShopUser.objects.create_superuser(
+                conf_parser.get('su', 'USERNAME', fallback='django'),
+                conf_parser.get('su', 'EMAIL', fallback='django@geekshop.local'),
+                conf_parser.get('su', 'PASSWORD', fallback='geekbrains'),
+                age=conf_parser.getint('su', 'AGE', fallback=99)
+            )
