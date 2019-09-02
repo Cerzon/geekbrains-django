@@ -4,7 +4,7 @@ from .models import ShopUser
 from basketapp.models import UserBasket, UserOrder
 
 
-class UserBasketsInline(admin.StackedInline):
+class BaseUserBasketInline(admin.StackedInline):
     ordering = ('-created',)
     extra = 0
     readonly_fields = ('basket_total',)
@@ -22,7 +22,7 @@ class UserBasketsInline(admin.StackedInline):
     basket_total.short_description = 'Сумма итого'
 
 
-class UserBasketInline(UserBasketsInline):
+class UserBasketInline(BaseUserBasketInline):
     model = UserBasket
     fields = (
         ('state', 'basket_total',),
@@ -34,7 +34,7 @@ class UserBasketInline(UserBasketsInline):
         return queryset
 
 
-class UserOrderInline(UserBasketsInline):
+class UserOrderInline(BaseUserBasketInline):
     model = UserOrder
     fields = (
         'basket_total',

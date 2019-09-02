@@ -16,7 +16,7 @@ class BasketSlotInline(admin.StackedInline):
     cost.short_description = 'Стоимость'
 
 
-class BasketAdmin(admin.ModelAdmin):
+class BaseUserBasketAdmin(admin.ModelAdmin):
     inlines = [
         BasketSlotInline,
     ]
@@ -40,7 +40,7 @@ class BasketAdmin(admin.ModelAdmin):
         return '#{0} от {1}'.format(obj.pk, obj.created.strftime('%d %b %Y'))
 
 
-class UserBasketAdmin(BasketAdmin):
+class UserBasketAdmin(BaseUserBasketAdmin):
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
         queryset = queryset.exclude(state='chkout')
@@ -58,7 +58,7 @@ class UserBasketAdmin(BasketAdmin):
 admin.site.register(UserBasket, UserBasketAdmin)
 
 
-class UserOrderAdmin(BasketAdmin):
+class UserOrderAdmin(BaseUserBasketAdmin):
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
         queryset = queryset.filter(state='chkout')
