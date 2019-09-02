@@ -1,37 +1,55 @@
 from django.contrib import admin
 from django.db.models import Count, F, Sum, DecimalField
 from .models import ShopUser
-from basketapp.models import UserBasket
+from basketapp.models import UserBasket, UserOrder
 
 
-class UserBasketInline(admin.StackedInline):
-    model = UserBasket
+class UserBasketsInline(admin.StackedInline):
     ordering = ('-created',)
     extra = 0
     readonly_fields = ('basket_total',)
-    fields = (
-        ('state', 'basket_total',),
-    )
     show_change_link = True
 
     def has_add_permission(self, request):
         return False
 
     def basket_total(self, obj):
-        basket = obj.slots.aggregate(total=Sum(
-            F('product__price') * F('quantity'),
-            output_field=DecimalField())
-        )
-        if not basket['total']:
-            basket['total'] = 0
-        return '{:.2f}'.format(basket['total'])
+        total = obj.get_info['total']
+        if not total:
+            total = 0
+        return '{:.2f}'.format(total)
 
     basket_total.short_description = 'Сумма итого'
+
+
+class UserBasketInline(UserBasketsInline):
+    model = UserBasket
+    fields = (
+        ('state', 'basket_total',),
+    )
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.exclude(state='chkout')
+        return queryset
+
+
+class UserOrderInline(UserBasketsInline):
+    model = UserOrder
+    fields = (
+        'basket_total',
+    )
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        queryset = queryset.filter(state='chkout')
+        return queryset
 
 
 class ShopUserAdmin(admin.ModelAdmin):
     inlines = [
         UserBasketInline,
+        UserOrderInline,
     ]
     list_display = (
         '__str__',
@@ -43,8 +61,12 @@ class ShopUserAdmin(admin.ModelAdmin):
     def basket_num(self, obj):
         return obj.basket.exclude(state='chkout').count()
 
+    basket_num.short_description = 'Корзин набрано'
+
     def order_num(self, obj):
         return obj.basket.filter(state='chkout').count()
+
+    order_num.short_description = 'Заказов оформлено'
 
 
 admin.site.register(ShopUser, ShopUserAdmin)
