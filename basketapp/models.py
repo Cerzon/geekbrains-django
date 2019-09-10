@@ -1,3 +1,4 @@
+from django.utils.functional import cached_property
 from django.db import models
 from django.db.models import Sum, Count, F
 from mainapp.models import Product
@@ -25,6 +26,7 @@ class UserBasket(models.Model):
             username = self.customer.username
         return 'Корзина пользователя {0} от {1}'.format(username, self.created.strftime('%d %b %Y'))
 
+    @cached_property
     def get_info(self):
         return self.slots.aggregate(
             total=Sum(
@@ -54,3 +56,13 @@ class BasketSlot(models.Model):
     @property
     def cost(self):
         return self.product.price * self.quantity
+
+
+class UserOrder(UserBasket):
+    class Meta:
+        proxy = True
+        verbose_name = 'заказ'
+        verbose_name_plural = 'заказы'
+
+    def __str__(self):
+        return 'Заказ пользователя {0} от {1}'.format(self.customer.username, self.created.strftime('%d %b %Y'))
