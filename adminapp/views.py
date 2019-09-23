@@ -10,6 +10,42 @@ from authapp.models import ShopUser
 from authapp.forms import ShopUserChangeForm, ShopUserRegisterForm
 
 
+def context_addition(key_name, key_value):
+    def method_decorator(func):
+        def wrapper(self, **kwargs):
+            context = func(self, **kwargs)
+            context[key_name] = key_value
+            return context
+        return wrapper
+    return method_decorator
+
+
+PRODUCT_LINKS = {
+    'list': ('adminapp:product_list', 'К перечню товаров',),
+    'detail': ('adminapp:product_detail', 'Просмотр',),
+    'create': ('adminapp:product_create', 'Создать новый',),
+    'update': ('adminapp:product_update', 'Изменить',),
+    'delete': ('adminapp:product_delete', 'Удалить',),
+    'filter': ('adminapp:cat_product_list', 'По категории',),
+}
+
+USER_LINKS = {
+    'list': ('adminapp:user_list', 'К списку пользователей',),
+    'detail': ('adminapp:user_detail', 'Просмотр пользователя',),
+    'create': ('adminapp:user_create', 'Создать пользователя',),
+    'update': ('adminapp:user_update', 'Изменить пользователя',),
+    'delete': ('adminapp:user_delete', 'Удалить пользователя',),
+}
+
+CATEGORY_LINKS = {
+    'list': ('adminapp:category_list', 'К списку категорий',),
+    'detail': ('adminapp:category_detail', 'Просмотр категории',),
+    'create': ('adminapp:category_create', 'Создать категорию',),
+    'update': ('adminapp:category_update', 'Изменить категорию',),
+    'delete': ('adminapp:category_delete', 'Удалить категорию',),
+}
+
+
 class SuperUserPassesTestMixin(UserPassesTestMixin):
     def test_func(self):
         return self.request.user.is_superuser
@@ -21,18 +57,11 @@ class CreateProductView(SuperUserPassesTestMixin, CreateView):
     template_name = 'adminapp/object_update.html'
     success_url = reverse_lazy('adminapp:product_list')
 
+    @context_addition('links', PRODUCT_LINKS)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Добавление товара'
         context['submit_label'] = 'Сохранить'
-        context['links'] = {
-            'list': ('adminapp:product_list', 'К перечню товаров',),
-            'detail': ('adminapp:product_detail', 'Просмотр',),
-            'create': ('adminapp:product_create', 'Создать новый',),
-            'update': ('adminapp:product_update', 'Изменить',),
-            'delete': ('adminapp:product_delete', 'Удалить',),
-            'filter': ('adminapp:cat_product_list', 'По категории',),
-        }
         return context
 
     def get_success_url(self):
@@ -47,18 +76,11 @@ class UpdateProductView(SuperUserPassesTestMixin, UpdateView):
     template_name = 'adminapp/object_update.html'
     success_url = reverse_lazy('adminapp:product_list')
 
+    @context_addition('links', PRODUCT_LINKS)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Редактирование товара'
         context['submit_label'] = 'Применить изменения'
-        context['links'] = {
-            'list': ('adminapp:product_list', 'К перечню товаров',),
-            'detail': ('adminapp:product_detail', 'Просмотр',),
-            'create': ('adminapp:product_create', 'Создать новый',),
-            'update': ('adminapp:product_update', 'Изменить',),
-            'delete': ('adminapp:product_delete', 'Удалить',),
-            'filter': ('adminapp:cat_product_list', 'По категории',),
-        }
         return context
     
     def get_success_url(self):
@@ -70,16 +92,9 @@ class DeleteProductView(SuperUserPassesTestMixin, DeleteView):
     template_name = 'adminapp/object_delete.html'
     success_url = reverse_lazy('adminapp:product_list')
 
+    @context_addition('links', PRODUCT_LINKS)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['links'] = {
-            'list': ('adminapp:product_list', 'К перечню товаров',),
-            'detail': ('adminapp:product_detail', 'Просмотр',),
-            'create': ('adminapp:product_create', 'Создать новый',),
-            'update': ('adminapp:product_update', 'Изменить',),
-            'delete': ('adminapp:product_delete', 'Удалить',),
-            'filter': ('adminapp:cat_product_list', 'По категории',),
-        }
         return context
 
 
@@ -93,6 +108,7 @@ class ProductListView(SuperUserPassesTestMixin, ListView):
             queryset = queryset.filter(category__pk=self.kwargs['category_id'])
         return queryset
 
+    @context_addition('links', PRODUCT_LINKS)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         categories = ProductCategory.objects.all()
@@ -100,14 +116,6 @@ class ProductListView(SuperUserPassesTestMixin, ListView):
         if self.kwargs.get('category_id', False):
             context['title'] += ' в категории "' + categories.get(pk=self.kwargs['category_id']).name + '"'
         context['filters'] = ProductCategory.objects.all()
-        context['links'] = {
-            'list': ('adminapp:product_list', 'К перечню товаров',),
-            'detail': ('adminapp:product_detail', 'Просмотр',),
-            'create': ('adminapp:product_create', 'Создать новый',),
-            'update': ('adminapp:product_update', 'Изменить',),
-            'delete': ('adminapp:product_delete', 'Удалить',),
-            'filter': ('adminapp:cat_product_list', 'По категории',),
-        }
         return context
 
 
@@ -115,16 +123,9 @@ class ProductDetailView(SuperUserPassesTestMixin, DetailView):
     model = Product
     template_name = 'adminapp/product_detail.html'
     
+    @context_addition('links', PRODUCT_LINKS)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['links'] = {
-            'list': ('adminapp:product_list', 'К перечню товаров',),
-            'detail': ('adminapp:product_detail', 'Просмотр',),
-            'create': ('adminapp:product_create', 'Создать новый',),
-            'update': ('adminapp:product_update', 'Изменить',),
-            'delete': ('adminapp:product_delete', 'Удалить',),
-            'filter': ('adminapp:cat_product_list', 'По категории',),
-        }
         return context
 
 
@@ -134,17 +135,11 @@ class CreateUserView(SuperUserPassesTestMixin, CreateView):
     template_name = 'adminapp/object_update.html'
     success_url = reverse_lazy('adminapp:user_list')
 
+    @context_addition('links', USER_LINKS)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Добавление пользователя'
         context['submit_label'] = 'Сохранить'
-        context['links'] = {
-            'list': ('adminapp:user_list', 'К списку пользователей',),
-            'detail': ('adminapp:user_detail', 'Просмотр пользователя',),
-            'create': ('adminapp:user_create', 'Создать пользователя',),
-            'update': ('adminapp:user_update', 'Изменить пользователя',),
-            'delete': ('adminapp:user_delete', 'Удалить пользователя',),
-        }
         return context
 
     def get_success_url(self):
@@ -159,17 +154,11 @@ class UpdateUserView(SuperUserPassesTestMixin, UpdateView):
     template_name = 'adminapp/object_update.html'
     success_url = reverse_lazy('adminapp:user_list')
 
+    @context_addition('links', USER_LINKS)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Редактирование пользователя'
         context['submit_label'] = 'Применить изменения'
-        context['links'] = {
-            'list': ('adminapp:user_list', 'К списку пользователей',),
-            'detail': ('adminapp:user_detail', 'Просмотр пользователя',),
-            'create': ('adminapp:user_create', 'Создать пользователя',),
-            'update': ('adminapp:user_update', 'Изменить пользователя',),
-            'delete': ('adminapp:user_delete', 'Удалить пользователя',),
-        }
         return context
     
     def get_success_url(self):
@@ -181,15 +170,9 @@ class DeleteUserView(SuperUserPassesTestMixin, DeleteView):
     template_name = 'adminapp/object_delete.html'
     success_url = reverse_lazy('adminapp:user_list')
 
+    @context_addition('links', USER_LINKS)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['links'] = {
-            'list': ('adminapp:user_list', 'К списку пользователей',),
-            'detail': ('adminapp:user_detail', 'Просмотр пользователя',),
-            'create': ('adminapp:user_create', 'Создать пользователя',),
-            'update': ('adminapp:user_update', 'Изменить пользователя',),
-            'delete': ('adminapp:user_delete', 'Удалить пользователя',),
-        }
         return context
 
 
@@ -197,16 +180,10 @@ class UserListView(SuperUserPassesTestMixin, ListView):
     model = ShopUser
     template_name = 'adminapp/object_list.html'
 
+    @context_addition('links', USER_LINKS)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Пользователи'
-        context['links'] = {
-            'list': ('adminapp:user_list', 'К списку пользователей',),
-            'detail': ('adminapp:user_detail', 'Просмотр пользователя',),
-            'create': ('adminapp:user_create', 'Создать пользователя',),
-            'update': ('adminapp:user_update', 'Изменить пользователя',),
-            'delete': ('adminapp:user_delete', 'Удалить пользователя',),
-        }
         return context
 
 
@@ -214,15 +191,9 @@ class UserDetailView(SuperUserPassesTestMixin, DetailView):
     model = ShopUser
     template_name = 'adminapp/user_detail.html'
     
+    @context_addition('links', USER_LINKS)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['links'] = {
-            'list': ('adminapp:user_list', 'К списку пользователей',),
-            'detail': ('adminapp:user_detail', 'Просмотр пользователя',),
-            'create': ('adminapp:user_create', 'Создать пользователя',),
-            'update': ('adminapp:user_update', 'Изменить пользователя',),
-            'delete': ('adminapp:user_delete', 'Удалить пользователя',),
-        }
         return context
 
 
@@ -232,17 +203,11 @@ class CreateCategoryView(SuperUserPassesTestMixin, CreateView):
     template_name = 'adminapp/object_update.html'
     success_url = reverse_lazy('adminapp:category_list')
 
+    @context_addition('links', CATEGORY_LINKS)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Добавление категории'
         context['submit_label'] = 'Сохранить'
-        context['links'] = {
-            'list': ('adminapp:category_list', 'К списку категорий',),
-            'detail': ('adminapp:category_detail', 'Просмотр категории',),
-            'create': ('adminapp:category_create', 'Создать категорию',),
-            'update': ('adminapp:category_update', 'Изменить категорию',),
-            'delete': ('adminapp:category_delete', 'Удалить категорию',),
-        }
         return context
 
     def get_success_url(self):
@@ -257,17 +222,11 @@ class UpdateCategoryView(SuperUserPassesTestMixin, UpdateView):
     template_name = 'adminapp/object_update.html'
     success_url = reverse_lazy('adminapp:category_list')
 
+    @context_addition('links', CATEGORY_LINKS)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Редактирование категории'
         context['submit_label'] = 'Применить изменения'
-        context['links'] = {
-            'list': ('adminapp:category_list', 'К списку категорий',),
-            'detail': ('adminapp:category_detail', 'Просмотр категории',),
-            'create': ('adminapp:category_create', 'Создать категорию',),
-            'update': ('adminapp:category_update', 'Изменить категорию',),
-            'delete': ('adminapp:category_delete', 'Удалить категорию',),
-        }
         return context
     
     def get_success_url(self):
@@ -279,15 +238,9 @@ class DeleteCategoryView(SuperUserPassesTestMixin, DeleteView):
     template_name = 'adminapp/object_delete.html'
     success_url = reverse_lazy('adminapp:category_list')
 
+    @context_addition('links', CATEGORY_LINKS)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['links'] = {
-            'list': ('adminapp:category_list', 'К списку категорий',),
-            'detail': ('adminapp:category_detail', 'Просмотр категории',),
-            'create': ('adminapp:category_create', 'Создать категорию',),
-            'update': ('adminapp:category_update', 'Изменить категорию',),
-            'delete': ('adminapp:category_delete', 'Удалить категорию',),
-        }
         return context
 
 
@@ -295,16 +248,10 @@ class CategoryListView(SuperUserPassesTestMixin, ListView):
     model = ProductCategory
     template_name = 'adminapp/object_list.html'
 
+    @context_addition('links', CATEGORY_LINKS)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Категории'
-        context['links'] = {
-            'list': ('adminapp:category_list', 'К списку категорий',),
-            'detail': ('adminapp:category_detail', 'Просмотр категории',),
-            'create': ('adminapp:category_create', 'Создать категорию',),
-            'update': ('adminapp:category_update', 'Изменить категорию',),
-            'delete': ('adminapp:category_delete', 'Удалить категорию',),
-        }
         return context
 
 
@@ -312,13 +259,7 @@ class CategoryDetailView(SuperUserPassesTestMixin, DetailView):
     model = ProductCategory
     template_name = 'adminapp/category_detail.html'
     
+    @context_addition('links', CATEGORY_LINKS)
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['links'] = {
-            'list': ('adminapp:category_list', 'К списку категорий',),
-            'detail': ('adminapp:category_detail', 'Просмотр категории',),
-            'create': ('adminapp:category_create', 'Создать категорию',),
-            'update': ('adminapp:category_update', 'Изменить категорию',),
-            'delete': ('adminapp:category_delete', 'Удалить категорию',),
-        }
         return context
