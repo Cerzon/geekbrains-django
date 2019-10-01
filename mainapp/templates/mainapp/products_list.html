@@ -5,7 +5,7 @@
     <section id="case-content">
         {% for item in object %}
         <figure class="case-item">
-            <a href="{% url 'products:product' item.category.slug item.slug %}"><img src="/media/{% if item.image.filename %}{{ item.image.filename }}{% else %}products_img/no_image.png{% endif %}"></a>
+            <a href="{% url 'products:product' item.category.slug item.slug %}"><img src="/media/{% if item.image %}{{ item.image }}{% else %}products_img/no_image.png{% endif %}"></a>
             <figcaption>
                 <h3><a href="{% url 'products:product' item.category.slug item.slug %}">{{ item.name|capfirst }}</a></h3>
                 <p>{{ item.description }}</p>
